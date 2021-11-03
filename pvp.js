@@ -1,3 +1,4 @@
+// Frame rate
 const fps = 60;
 
 // Canvas
@@ -16,16 +17,16 @@ class Component {
     this.width = width;
     this.height = height;
     this.color = color;
-    this.speedY = 5;
+    this.speedY = 80;
     this.score = 0;
   }
 }
 
 // Create player 1 object
-const computer1 = new Component(0, canvas.height / 2 - 50, 10, 100, "white");
+const player1 = new Component(0, canvas.height / 2 - 50, 10, 100, "white");
 
 // Create computer object
-const computer2 = new Component(
+const player2 = new Component(
   canvas.width - 10,
   canvas.height / 2 - 50,
   10,
@@ -88,19 +89,43 @@ function drawNet() {
 // Render everything onto the canvas
 function render() {
   drawRectangle(field);
-  drawRectangle(computer1);
-  drawRectangle(computer2);
+  drawRectangle(player1);
+  drawRectangle(player2);
   drawBall(ball);
   drawNet();
-  drawText(computer1.score, canvas.width / 4, canvas.height / 5, "white");
-  drawText(computer2.score, (3 * canvas.width) / 4, canvas.height / 5, "white");
+  drawText(player1.score, canvas.width / 4, canvas.height / 5, "white");
+  drawText(player2.score, (3 * canvas.width) / 4, canvas.height / 5, "white");
 }
 
-// canvas.addEventListener("mousemove", movePaddle);
-// function movePaddle(event) {
-//   let rect = canvas.getBoundingClientRect();
-//   computer1.y = event.clientY - rect.top - computer1.height / 2;
-// }
+document.addEventListener("keydown", (event) => {
+  switch (event.key) {
+    case "ArrowUp":
+      player2.y -= player2.speedY;
+      if (player2.y <= 0) {
+        player2.y = 0;
+      }
+      break;
+    case "ArrowDown":
+      player2.y += player2.speedY;
+      if (player2.y + player2.height >= canvas.height) {
+        player2.y = canvas.height - player2.height;
+      }
+      break;
+    case "w":
+      player1.y -= player1.speedY;
+      if (player1.y <= 0) {
+        player1.y = 0;
+      }
+
+      break;
+    case "s":
+      player1.y += player1.speedY;
+      if (player1.y + player1.height >= canvas.height) {
+        player1.y = canvas.height - player1.height;
+      }
+      break;
+  }
+});
 
 function collision(b, p) {
   b.top = b.y - b.radius;
@@ -119,9 +144,9 @@ function collision(b, p) {
 }
 // reset ball
 function resetBall() {
-  ball.velocityX = 55;
-  ball.velocityY = 55;
-  ball.speed = 55;
+  ball.velocityX = 5;
+  ball.velocityY = 5;
+  ball.speed = 5;
   ball.x = canvas.width / 2;
   ball.y = canvas.height / 2;
   let direction = Math.floor(Math.random() * 2);
@@ -135,16 +160,11 @@ function updateField() {
   ball.x += ball.velocityX;
   ball.y += ball.velocityY;
   // computer AI
-  let difficultyLevel = 0.09;
-  computer1.y +=
-    (ball.y - (computer1.y + computer1.height / 2)) * difficultyLevel;
-  computer2.y +=
-    (ball.y - (computer2.y + computer2.height / 2)) * difficultyLevel;
 
   if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) {
     ball.velocityY = -ball.velocityY;
   }
-  let player = ball.x < canvas.width / 2 ? computer1 : computer2;
+  let player = ball.x < canvas.width / 2 ? player1 : player2;
   if (collision(ball, player)) {
     // ball.velocityX = -ball.velocityX;
     let collidePoint = ball.y - (player.y + player.height / 2);
@@ -157,16 +177,16 @@ function updateField() {
     // change vel X and Y
     ball.velocityX = direction * ball.speed * Math.cos(angleRad);
     ball.velocityY = ball.speed * Math.sin(angleRad);
-    ball.speed += 0.5;
+    ball.speed += 0.2;
   }
 
   // update score
   if (ball.x < -100) {
     // player 2 win
-    computer2.score++;
+    player2.score++;
     resetBall();
   } else if (ball.x > canvas.width + 100) {
-    computer1.score++;
+    player1.score++;
     resetBall();
   }
 }
@@ -181,15 +201,25 @@ function game() {
   }
 }
 function checkGameOver() {
-  if (computer1.score === 10) {
+  if (player1.score === 10) {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    drawText("Computer 1 Won!", canvas.width / 4, canvas.height / 4, "white");
+    drawText(
+      "Player 1 Won!",
+      canvas.width / 3 + 20,
+      canvas.height / 3,
+      "white"
+    );
     return true;
-  } else if (computer2.score === 10) {
+  } else if (player2.score === 10) {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    drawText("Computer 2 Won!", canvas.width / 4, canvas.height / 4, "white");
+    drawText(
+      "Player 2 Won!",
+      canvas.width / 3 + 20,
+      canvas.height / 3,
+      "white"
+    );
     return true;
   }
   return false;
