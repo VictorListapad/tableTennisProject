@@ -1,4 +1,3 @@
-// Frame rate
 const fps = 60;
 
 // Canvas
@@ -23,10 +22,10 @@ class Component {
 }
 
 // Create player 1 object
-const player1 = new Component(0, canvas.height / 2 - 50, 10, 100, "white");
+const computer1 = new Component(0, canvas.height / 2 - 50, 10, 100, "white");
 
 // Create computer object
-const computer = new Component(
+const computer2 = new Component(
   canvas.width - 10,
   canvas.height / 2 - 50,
   10,
@@ -89,19 +88,19 @@ function drawNet() {
 // Render everything onto the canvas
 function render() {
   drawRectangle(field);
-  drawRectangle(player1);
-  drawRectangle(computer);
+  drawRectangle(computer1);
+  drawRectangle(computer2);
   drawBall(ball);
   drawNet();
-  drawText(player1.score, canvas.width / 4, canvas.height / 5, "white");
-  drawText(computer.score, (3 * canvas.width) / 4, canvas.height / 5, "white");
+  drawText(computer1.score, canvas.width / 4, canvas.height / 5, "white");
+  drawText(computer2.score, (3 * canvas.width) / 4, canvas.height / 5, "white");
 }
 
-canvas.addEventListener("mousemove", movePaddle);
-function movePaddle(event) {
-  let rect = canvas.getBoundingClientRect();
-  player1.y = event.clientY - rect.top - player1.height / 2;
-}
+// canvas.addEventListener("mousemove", movePaddle);
+// function movePaddle(event) {
+//   let rect = canvas.getBoundingClientRect();
+//   computer1.y = event.clientY - rect.top - computer1.height / 2;
+// }
 
 function collision(b, p) {
   b.top = b.y - b.radius;
@@ -136,13 +135,16 @@ function updateField() {
   ball.x += ball.velocityX;
   ball.y += ball.velocityY;
   // computer AI
-  let difficultyLevel = 0.08;
-  computer.y += (ball.y - (computer.y + computer.height / 2)) * difficultyLevel;
+  let difficultyLevel = 0.5;
+  computer1.y +=
+    (ball.y - (computer1.y + computer1.height / 2)) * difficultyLevel;
+  computer2.y +=
+    (ball.y - (computer2.y + computer2.height / 2)) * difficultyLevel;
 
   if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) {
     ball.velocityY = -ball.velocityY;
   }
-  let player = ball.x < canvas.width / 2 ? player1 : computer;
+  let player = ball.x < canvas.width / 2 ? computer1 : computer2;
   if (collision(ball, player)) {
     // ball.velocityX = -ball.velocityX;
     let collidePoint = ball.y - (player.y + player.height / 2);
@@ -155,16 +157,16 @@ function updateField() {
     // change vel X and Y
     ball.velocityX = direction * ball.speed * Math.cos(angleRad);
     ball.velocityY = ball.speed * Math.sin(angleRad);
-    ball.speed += 0.2;
+    ball.speed += 0.5;
   }
 
   // update score
   if (ball.x < -100) {
     // player 2 win
-    computer.score++;
+    computer1.score++;
     resetBall();
   } else if (ball.x > canvas.width + 100) {
-    player1.score++;
+    computer2.score++;
     resetBall();
   }
 }
@@ -179,7 +181,7 @@ function game() {
   }
 }
 function checkGameOver() {
-  if (player1.score === 10) {
+  if (computer1.score === 10) {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     drawText(
@@ -189,7 +191,7 @@ function checkGameOver() {
       "white"
     );
     return true;
-  } else if (computer.score === 10) {
+  } else if (computer2.score === 10) {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     drawText(
