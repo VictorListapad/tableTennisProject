@@ -6,7 +6,7 @@
 body {
   width: 100vw;
   height: 100vh;
-  background: url("/pexels-andrea-piacquadio-3771083.jpg") center/cover
+  background: url("../pexels-andrea-piacquadio-3771083.jpg") center/cover
     no-repeat fixed;
   display: flex;
   flex-direction: column;
