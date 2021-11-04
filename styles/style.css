@@ -1,0 +1,52 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  width: 100vw;
+  height: 100vh;
+  background: url("/pexels-andrea-piacquadio-3771083.jpg") center/cover
+    no-repeat fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+h1 {
+  font-size: 4rem;
+  font-family: "Courier New", Courier, monospace;
+  color: #fff;
+}
+canvas {
+  background: black;
+  position: absolute;
+  left: 22.5%;
+  top: 20%;
+  outline: 4px solid black;
+}
+
+.btn {
+  margin-bottom: 1rem;
+  width: 7rem;
+  height: 2.8rem;
+  background-color: orange;
+  outline: 2px solid orange;
+  transition: all 0.1s linear;
+  font-size: 1rem;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  text-transform: uppercase;
+}
+
+.btn:hover {
+  outline-offset: 2px;
+  cursor: pointer;
+  background: red;
+  color: white;
+  outline-color: red;
+}
+
+.btns {
+  display: flex;
+  flex-direction: column;
+}
