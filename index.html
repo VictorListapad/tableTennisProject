@@ -8,10 +8,43 @@
     <link rel="stylesheet" href="./styles/style.css" />
   </head>
   <body>
-    <h1>Table Tennis Project</h1>
-    <canvas id="field" width="800" height="400"></canvas>
+    <h1>Table Tennis</h1>
+    <div class="canvas">
+      <canvas id="field" width="800" height="400"></canvas>
+    </div>
     <div class="btns">
       <button class="btn" id="singleBtn">Single Player</button>
+      <div id="diffBtns">
+        <input
+          type="radio"
+          class="diff"
+          id="easy"
+          name="difficulty"
+          value="0.068"
+          checked
+        />Easy
+        <input
+          type="radio"
+          class="diff"
+          id="medium"
+          name="difficulty"
+          value="0.06"
+        />Medium
+        <input
+          type="radio"
+          class="diff"
+          id="hard"
+          name="difficulty"
+          value="0.08"
+        />Hard
+        <input
+          type="radio"
+          class="diff"
+          id="impossible"
+          name="difficulty"
+          value="0.1"
+        />Insane
+      </div>
       <button class="btn" id="multiBtn">Multiplayer</button>
       <button class="btn" id="aiBtn">AI VS AI</button>
       <button class="btn" id="mainMenu">Main Menu</button>

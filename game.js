@@ -5,10 +5,6 @@ function singlePlayer() {
   // Canvas
   const canvas = document.getElementById("field");
   const ctx = canvas.getContext("2d");
-  canvas.style.position = "absolute";
-  canvas.style.top = "20%";
-  canvas.style.left = "22.5%";
-  canvas.style.outline = "4px solid black";
 
   // Components for walls, paddles, net and field
   class Component {
@@ -24,7 +20,7 @@ function singlePlayer() {
   }
 
   // Create player 1 object
-  const player1 = new Component(0, canvas.height / 2 - 50, 10, 100, "white");
+  const player1 = new Component(0, canvas.height / 2 - 50, 10, 100, "blue");
 
   // Create computer object
   const computer = new Component(
@@ -32,7 +28,7 @@ function singlePlayer() {
     canvas.height / 2 - 50,
     10,
     100,
-    "white"
+    "red"
   );
 
   // Create field object
@@ -80,21 +76,24 @@ function singlePlayer() {
       ctx.fillRect(net.x, net.y + i, net.width, net.height);
     }
   }
+  function pickDifficulty() {
+    let difficulty = document.getElementsByName("difficulty");
+    for (let i = 0; i < difficulty.length; i++) {
+      if (difficulty[i].checked) {
+        return difficulty[i].value;
+      }
+    }
+  }
 
   // Render everything onto the canvas
   function render() {
     drawRectangle(field);
     drawRectangle(player1);
     drawRectangle(computer);
-    drawBall(ball);
     drawNet();
-    drawText(player1.score, canvas.width / 4, canvas.height / 5, "white");
-    drawText(
-      computer.score,
-      (3 * canvas.width) / 4,
-      canvas.height / 5,
-      "white"
-    );
+    drawBall(ball);
+    drawText(player1.score, canvas.width / 4, canvas.height / 5, "blue");
+    drawText(computer.score, (3 * canvas.width) / 4, canvas.height / 5, "red");
   }
 
   canvas.addEventListener("mousemove", movePaddle);
@@ -132,6 +131,7 @@ function singlePlayer() {
     ball.velocityX = 5;
     ball.velocityY = 5;
     ball.speed = 5;
+    ball.color = "white";
     ball.x = canvas.width / 2;
     ball.y = canvas.height / 2;
     let direction = Math.floor(Math.random() * 2);
@@ -145,7 +145,9 @@ function singlePlayer() {
     ball.x += ball.velocityX;
     ball.y += ball.velocityY;
     // computer AI
-    let difficultyLevel = 0.08;
+    // let difficultyLevel = 0.08;
+    let difficultyLevel = pickDifficulty();
+    console.log(difficultyLevel);
     computer.y +=
       (ball.y - (computer.y + computer.height / 2)) * difficultyLevel;
 
@@ -153,6 +155,11 @@ function singlePlayer() {
       ball.velocityY = -ball.velocityY;
     }
     let player = ball.x < canvas.width / 2 ? player1 : computer;
+    // if (player === player1) {
+    //   ball.color = "blue";
+    // } else {
+    //   ball.color = "red";
+    // }
     if (collision(ball, player)) {
       // ball.velocityX = -ball.velocityX;
       let collidePoint = ball.y - (player.y + player.height / 2);
@@ -162,6 +169,11 @@ function singlePlayer() {
       let angleRad = (collidePoint * Math.PI) / 4;
       // direction of the ball when hit
       let direction = ball.x < canvas.width / 2 ? 1 : -1;
+      if (direction === 1) {
+        ball.color = "blue";
+      } else {
+        ball.color = "red";
+      }
       // change vel X and Y
       ball.velocityX = direction * ball.speed * Math.cos(angleRad);
       ball.velocityY = ball.speed * Math.sin(angleRad);
@@ -189,25 +201,15 @@ function singlePlayer() {
     }
   }
   function checkGameOver() {
-    if (player1.score === 10) {
+    if (player1.score === 3) {
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      drawText(
-        "Player 1 Won!",
-        canvas.width / 3 + 20,
-        canvas.height / 3,
-        "white"
-      );
+      drawText("Player Wins!", 250, 150, "blue");
       return true;
-    } else if (computer.score === 10) {
+    } else if (computer.score === 3) {
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      drawText(
-        "Player 2 Won!",
-        canvas.width / 3 + 20,
-        canvas.height / 3,
-        "white"
-      );
+      drawText("Computer Wins :(", 200, 150, "red");
       return true;
     }
     return false;
@@ -222,10 +224,6 @@ function multiplayer() {
   // Canvas
   const canvas = document.getElementById("field");
   const ctx = canvas.getContext("2d");
-  canvas.style.position = "absolute";
-  canvas.style.top = "20%";
-  canvas.style.left = "22.5%";
-  canvas.style.outline = "4px solid black";
 
   // Components for walls, paddles, net and field
   class Component {
@@ -241,7 +239,7 @@ function multiplayer() {
   }
 
   // Create player 1 object
-  const player1 = new Component(0, canvas.height / 2 - 50, 10, 100, "white");
+  const player1 = new Component(0, canvas.height / 2 - 50, 10, 100, "blue");
 
   // Create computer object
   const player2 = new Component(
@@ -249,7 +247,7 @@ function multiplayer() {
     canvas.height / 2 - 50,
     10,
     100,
-    "white"
+    "red"
   );
 
   // Create field object
@@ -303,10 +301,10 @@ function multiplayer() {
     drawRectangle(field);
     drawRectangle(player1);
     drawRectangle(player2);
-    drawBall(ball);
     drawNet();
-    drawText(player1.score, canvas.width / 4, canvas.height / 5, "white");
-    drawText(player2.score, (3 * canvas.width) / 4, canvas.height / 5, "white");
+    drawBall(ball);
+    drawText(player1.score, canvas.width / 4, canvas.height / 5, "blue");
+    drawText(player2.score, (3 * canvas.width) / 4, canvas.height / 5, "red");
   }
 
   document.addEventListener("keydown", (event) => {
@@ -362,6 +360,7 @@ function multiplayer() {
     ball.velocityX = 5;
     ball.velocityY = 5;
     ball.speed = 5;
+    ball.color = "white";
     ball.x = canvas.width / 2;
     ball.y = canvas.height / 2;
     let direction = Math.floor(Math.random() * 2);
@@ -387,6 +386,11 @@ function multiplayer() {
       let angleRad = (collidePoint * Math.PI) / 4;
       // direction of the ball when hit
       let direction = ball.x < canvas.width / 2 ? 1 : -1;
+      if (direction === 1) {
+        ball.color = "blue";
+      } else {
+        ball.color = "red";
+      }
       // change vel X and Y
       ball.velocityX = direction * ball.speed * Math.cos(angleRad);
       ball.velocityY = ball.speed * Math.sin(angleRad);
@@ -415,24 +419,24 @@ function multiplayer() {
     }
   }
   function checkGameOver() {
-    if (player1.score === 10) {
+    if (player1.score === 3) {
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       drawText(
-        "Player 1 Won!",
+        "Player 1 Wins!",
         canvas.width / 3 + 20,
         canvas.height / 3,
-        "white"
+        "blue"
       );
       return true;
-    } else if (player2.score === 10) {
+    } else if (player2.score === 3) {
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       drawText(
-        "Player 2 Won!",
+        "Player 2 Wins!",
         canvas.width / 3 + 20,
         canvas.height / 3,
-        "white"
+        "red"
       );
       return true;
     }
@@ -447,10 +451,6 @@ function aivsai() {
   // Canvas
   const canvas = document.getElementById("field");
   const ctx = canvas.getContext("2d");
-  canvas.style.position = "absolute";
-  canvas.style.top = "20%";
-  canvas.style.left = "22.5%";
-  canvas.style.outline = "4px solid black";
 
   // Components for walls, paddles, net and field
   class Component {
@@ -466,7 +466,7 @@ function aivsai() {
   }
 
   // Create player 1 object
-  const computer1 = new Component(0, canvas.height / 2 - 50, 10, 100, "white");
+  const computer1 = new Component(0, canvas.height / 2 - 50, 10, 100, "blue");
 
   // Create computer object
   const computer2 = new Component(
@@ -474,7 +474,7 @@ function aivsai() {
     canvas.height / 2 - 50,
     10,
     100,
-    "white"
+    "red"
   );
 
   // Create field object
@@ -528,15 +528,10 @@ function aivsai() {
     drawRectangle(field);
     drawRectangle(computer1);
     drawRectangle(computer2);
-    drawBall(ball);
     drawNet();
-    drawText(computer1.score, canvas.width / 4, canvas.height / 5, "white");
-    drawText(
-      computer2.score,
-      (3 * canvas.width) / 4,
-      canvas.height / 5,
-      "white"
-    );
+    drawBall(ball);
+    drawText(computer1.score, canvas.width / 4, canvas.height / 5, "blue");
+    drawText(computer2.score, (3 * canvas.width) / 4, canvas.height / 5, "red");
   }
 
   function collision(b, p) {
@@ -562,6 +557,7 @@ function aivsai() {
     ball.velocityX = 5;
     ball.velocityY = 5;
     ball.speed = 5;
+    ball.color = "white";
     ball.x = canvas.width / 2;
     ball.y = canvas.height / 2;
     let direction = Math.floor(Math.random() * 2);
@@ -594,6 +590,11 @@ function aivsai() {
       let angleRad = (collidePoint * Math.PI) / 4;
       // direction of the ball when hit
       let direction = ball.x < canvas.width / 2 ? 1 : -1;
+      if (direction === 1) {
+        ball.color = "blue";
+      } else {
+        ball.color = "red";
+      }
       // change vel X and Y
       ball.velocityX = direction * ball.speed * Math.cos(angleRad);
       ball.velocityY = ball.speed * Math.sin(angleRad);
@@ -621,15 +622,15 @@ function aivsai() {
     }
   }
   function checkGameOver() {
-    if (computer1.score === 10) {
+    if (computer1.score === 3) {
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      drawText("Computer 1 Won!", canvas.width / 4, canvas.height / 4, "white");
+      drawText("Computer 1 Wins!", canvas.width / 4, canvas.height / 4, "blue");
       return true;
-    } else if (computer2.score === 10) {
+    } else if (computer2.score === 3) {
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      drawText("Computer 2 Won!", canvas.width / 4, canvas.height / 4, "white");
+      drawText("Computer 2 Wins!", canvas.width / 4, canvas.height / 4, "red");
       return true;
     }
     return false;
@@ -640,31 +641,36 @@ const aibtn = document.getElementById("aiBtn");
 const mp = document.getElementById("multiBtn");
 const sp = document.getElementById("singleBtn");
 const mainMenu = document.getElementById("mainMenu");
+const diffLvl = document.getElementById("diffBtns");
 
 aibtn.addEventListener("click", () => {
   aivsai();
-  aibtn.style.display = "none";
-  mp.style.display = "none";
-  sp.style.display = "none";
+  sp.style.visibility = "hidden";
+  diffLvl.style.visibility = "hidden";
+  mp.style.visibility = "hidden";
+  aibtn.style.visibility = "hidden";
 });
 
 mp.addEventListener("click", () => {
   multiplayer();
-  aibtn.style.display = "none";
-  mp.style.display = "none";
-  sp.style.display = "none";
+  aibtn.style.visibility = "hidden";
+  mp.style.visibility = "hidden";
+  sp.style.visibility = "hidden";
+  diffLvl.style.visibility = "hidden";
 });
 
 sp.addEventListener("click", () => {
   singlePlayer();
-  aibtn.style.display = "none";
-  mp.style.display = "none";
-  sp.style.display = "none";
+  aibtn.style.visibility = "hidden";
+  mp.style.visibility = "hidden";
+  sp.style.visibility = "hidden";
+  diffLvl.style.visibility = "hidden";
 });
 
 mainMenu.addEventListener("click", () => {
   clearInterval(interval);
-  aibtn.style.display = "inline";
-  mp.style.display = "inline";
-  sp.style.display = "inline";
+  diffLvl.style.visibility = "visible";
+  aibtn.style.visibility = "visible";
+  mp.style.visibility = "visible";
+  sp.style.visibility = "visible";
 });

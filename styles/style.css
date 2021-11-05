@@ -10,7 +10,7 @@ body {
     no-repeat fixed;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 }
 h1 {
@@ -20,11 +20,16 @@ h1 {
 }
 canvas {
   background: black;
-  position: absolute;
-  left: 22.5%;
-  top: 20%;
+  display: block;
   outline: 4px solid black;
 }
+
+/* @media screen and (min-width: 1920px) {
+  canvas {
+    left: 25%;
+    top: 25%;
+  }
+} */
 
 .btn {
   margin-bottom: 1rem;
@@ -49,4 +54,17 @@ canvas {
 .btns {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#diffBtns {
+  width: 40vw;
+  color: white;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  margin: 1rem 0;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
